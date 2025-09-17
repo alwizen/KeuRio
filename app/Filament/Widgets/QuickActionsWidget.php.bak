@@ -1,0 +1,16 @@
+<?php
+
+namespace App\Filament\Widgets;
+
+use Filament\Widgets\ChartWidget;
+
+class QuickActionsWidget extends ChartWidget
+{
+    protected static ?string $heading = 'Chart';
+
+
+    protected function getType(): string
+    {
+        return 'bar';
+    }
+}
