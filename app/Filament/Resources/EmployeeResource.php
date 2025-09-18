@@ -33,7 +33,8 @@ class EmployeeResource extends Resource
 
             Forms\Components\TextInput::make('phone')
                 ->label('Telp')
-                ->tel(),
+                ->tel()
+                ->default(6285),
 
             Forms\Components\Textarea::make('address')
                 ->rows(2)
