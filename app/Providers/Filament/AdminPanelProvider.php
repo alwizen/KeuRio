@@ -19,6 +19,8 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Swis\Filament\Backgrounds\FilamentBackgroundsPlugin;
+use Swis\Filament\Backgrounds\ImageProviders\MyImages;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -30,6 +32,7 @@ class AdminPanelProvider extends PanelProvider
             ->brandName('Keuangan RBJ')
             ->path('/')
             ->login()
+            ->favicon('img/fav.png')
             ->colors([
                 'primary' => Color::hex('#071e49'),
             ])
@@ -67,6 +70,15 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+            ])
+            ->plugins([
+                FilamentBackgroundsPlugin::make()
+                    ->showAttribution(false)
+                    ->imageProvider(
+                        MyImages::make()
+                            ->directory('images/bg')
+                    ),
+
             ])
             ->authMiddleware([
                 Authenticate::class,
