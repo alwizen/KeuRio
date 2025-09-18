@@ -61,7 +61,7 @@
               </path>
             </svg>
           </div>
-          <h1 class="text-xl font-semibold text-slate-900">FinanceTracker</h1>
+          <h1 class="text-xl font-semibold text-slate-900">Keuangan RBJ</h1>
         </div>
         <div class="flex items-center space-x-4">
           <a href="/"
