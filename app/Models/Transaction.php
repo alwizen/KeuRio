@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Transaction extends Model
 {
@@ -15,7 +16,7 @@ class Transaction extends Model
         'description',
         'amount',
         'type',
-        'category',
+        'category_id',
         'transaction_date',
     ];
 
@@ -24,7 +25,11 @@ class Transaction extends Model
         'transaction_date' => 'date',
     ];
 
-    // Konstanta untuk type
+    // Relationship dengan Category
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
+    }
     const TYPE_INCOME = 'income';
     const TYPE_EXPENSE = 'expense';
 
@@ -92,12 +97,16 @@ class Transaction extends Model
     // Method untuk mendapatkan kategori yang paling sering digunakan
     public static function getPopularCategories(int $limit = 5): array
     {
-        return self::selectRaw('category, COUNT(*) as count')
-                  ->whereNotNull('category')
-                  ->groupBy('category')
+        return self::with('category')
+                  ->whereNotNull('category_id')
+                  ->selectRaw('category_id, COUNT(*) as count')
+                  ->groupBy('category_id')
                   ->orderByDesc('count')
                   ->limit($limit)
-                  ->pluck('count', 'category')
+                  ->get()
+                  ->mapWithKeys(function ($item) {
+                      return [$item->category->name => $item->count];
+                  })
                   ->toArray();
     }
 }

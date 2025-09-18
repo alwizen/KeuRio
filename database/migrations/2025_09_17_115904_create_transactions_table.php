@@ -17,13 +17,14 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->decimal('amount', 15, 2);
             $table->enum('type', ['income', 'expense']); // pemasukan atau pengeluaran
-            $table->string('category')->nullable(); // kategori seperti makanan, transportasi, gaji, dll
-            $table->date('transaction_date');
+                        $table->foreignId('category_id')->nullable()->constrained()->nullOnDelete();
+           $table->date('transaction_date');
             $table->timestamps();
             
             // Index untuk performa query
-            $table->index(['type', 'transaction_date']);
-            $table->index('category');
+                        $table->index(['type', 'transaction_date', 'category_id']);
+            // $table->index(['type', 'transaction_date']);
+            // $table->index('category');
         });
     }
 

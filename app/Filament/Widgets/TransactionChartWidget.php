@@ -8,13 +8,11 @@ use Illuminate\Support\Carbon;
 
 class TransactionChartWidget extends ChartWidget
 {
-    protected static ?string $heading = 'Trend Pemasukan & Pengeluaran';
+    protected static ?string $heading = 'Pemasukan & Pengeluaran';
     
     protected static ?int $sort = 2;
     
     // protected int | string | array $columnSpan = 'full';
-
-    // protected static ?string $slug = 'transaction-chart-widget';
 
     public ?string $filter = 'trend';
 
@@ -35,7 +33,7 @@ class TransactionChartWidget extends ChartWidget
             'trend' => $this->getTrendData(),
             // 'category' => $this->getCategoryData(),
             'daily' => $this->getDailyData(),
-            default => $this->getDailyData(),
+            default => $this->getTrendData(),
         };
     }
 
@@ -88,11 +86,12 @@ class TransactionChartWidget extends ChartWidget
     //     $currentMonth = now();
         
     //     // Ambil top 5 kategori pengeluaran bulan ini
-    //     $expenseCategories = Transaction::expense()
+    //     $expenseCategories = Transaction::with('category')
+    //         ->expense()
     //         ->inMonth($currentMonth->month, $currentMonth->year)
-    //         ->selectRaw('category, SUM(amount) as total')
-    //         ->whereNotNull('category')
-    //         ->groupBy('category')
+    //         ->whereNotNull('category_id')
+    //         ->selectRaw('category_id, SUM(amount) as total')
+    //         ->groupBy('category_id')
     //         ->orderByDesc('total')
     //         ->limit(5)
     //         ->get();
@@ -103,22 +102,12 @@ class TransactionChartWidget extends ChartWidget
     //         '#ef4444', '#f97316', '#eab308', '#84cc16', '#06b6d4'
     //     ];
         
-    //     foreach ($expenseCategories as $index => $category) {
-    //         $categoryNames = [
-    //             'makanan' => 'Makanan & Minuman',
-    //             'transportasi' => 'Transportasi',
-    //             'belanja' => 'Belanja',
-    //             'tagihan' => 'Tagihan',
-    //             'kesehatan' => 'Kesehatan',
-    //             'pendidikan' => 'Pendidikan',
-    //             'hiburan' => 'Hiburan',
-    //             'pakaian' => 'Pakaian',
-    //             'rumah_tangga' => 'Rumah Tangga',
-    //             'lainnya' => 'Lainnya',
-    //         ];
+    //     foreach ($expenseCategories as $index => $transaction) {
+    //         $categoryName = $transaction->category?->name ?? 'Tidak ada kategori';
+    //         $categoryIcon = $transaction->category?->icon ?? '';
             
-    //         $labels[] = $categoryNames[$category->category] ?? $category->category;
-    //         $data[] = $category->total;
+    //         $labels[] = ($categoryIcon ? $categoryIcon . ' ' : '') . $categoryName;
+    //         $data[] = $transaction->total;
     //     }
         
     //     return [

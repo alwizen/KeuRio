@@ -46,7 +46,7 @@ class RecentTransactionsWidget extends BaseWidget
                         'danger' => 'expense',
                     ])
                     ->size('xs'),
-                Tables\Columns\TextColumn::make('category')
+                Tables\Columns\TextColumn::make('category.name')
                     ->label('Kategori')
                     // ->searchable()
                     ->weight(FontWeight::Medium)
