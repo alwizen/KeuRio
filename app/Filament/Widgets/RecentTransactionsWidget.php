@@ -12,10 +12,15 @@ use Filament\Support\Enums\FontWeight;
 class RecentTransactionsWidget extends BaseWidget
 {
     protected static ?string $heading = 'Transaksi Terbaru';
-    
+
+    protected static bool $isLazy = false;
+
     protected static ?int $sort = 3;
-    
-    // protected int | string | array $columnSpan = 2;
+
+    protected static ?string $maxHeight = '200px';
+
+
+    protected int | string | array $columnSpan = 2;
 
     public function table(Table $table): Table
     {
@@ -26,18 +31,18 @@ class RecentTransactionsWidget extends BaseWidget
             ->columns([
                 Tables\Columns\TextColumn::make('transaction_date')
                     ->label('Tanggal')
-                    ->date('d/m')
+                    ->date()
                     ->sortable(),
-                    
+
                 Tables\Columns\TextColumn::make('title')
                     ->label('Judul')
                     // ->searchable()
                     ->weight(FontWeight::Medium)
                     ->limit(20),
-                    
+
                 Tables\Columns\BadgeColumn::make('type')
                     ->label('Jenis')
-                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                    ->formatStateUsing(fn(string $state): string => match ($state) {
                         'income' => 'Masuk',
                         'expense' => 'Keluar',
                     })
@@ -51,11 +56,12 @@ class RecentTransactionsWidget extends BaseWidget
                     // ->searchable()
                     ->weight(FontWeight::Medium)
                     ->limit(20),
-                    
+
                 Tables\Columns\TextColumn::make('amount')
                     ->label('Jumlah')
-                    ->formatStateUsing(fn ($state) => 'Rp ' . number_format($state, 0, ',', '.'))
-                    ->color(fn (Transaction $record): string => 
+                    ->formatStateUsing(fn($state) => 'Rp ' . number_format($state, 0, ',', '.'))
+                    ->color(
+                        fn(Transaction $record): string =>
                         $record->type === 'income' ? 'success' : 'danger'
                     )
                     ->weight(FontWeight::Bold),

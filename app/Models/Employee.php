@@ -20,14 +20,14 @@ class Employee extends Model
     }
 
     // Auto-generate 5-digit NIP if empty
-    protected static function booted(): void
-    {
-        static::creating(function (self $employee) {
-            if (empty($employee->nip)) {
-                $employee->nip = self::generateNip();
-            }
-        });
-    }
+        protected static function booted()
+{
+    static::creating(function ($employee) {
+        if (empty($employee->nip)) {
+            $employee->nip = 'RBJ-' . str_pad(mt_rand(0, 99999), 5, '0', STR_PAD_LEFT);
+        }
+    });
+}
 
     public static function generateNip(): string
     {

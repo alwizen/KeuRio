@@ -22,15 +22,15 @@ class CategoryResource extends Resource
     protected static ?string $model = Category::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-tag';
-    
+
     protected static ?string $navigationLabel = 'Kategori';
 
-        protected static ?string $navigationGroup = 'KAS';
-    
+    protected static ?string $navigationGroup = 'KAS 💸';
+
     protected static ?string $modelLabel = 'Kategori';
-    
+
     protected static ?string $pluralModelLabel = 'Kategori';
-    
+
     protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form
@@ -44,10 +44,11 @@ class CategoryResource extends Resource
                             ->required()
                             ->maxLength(255)
                             ->live(onBlur: true)
-                            ->afterStateUpdated(fn ($state, Forms\Set $set) => 
+                            ->afterStateUpdated(
+                                fn($state, Forms\Set $set) =>
                                 $set('slug', Str::slug($state))
                             ),
-                            
+
                         Forms\Components\TextInput::make('slug')
                             ->label('Slug')
                             ->required()
@@ -55,26 +56,26 @@ class CategoryResource extends Resource
                             ->unique(ignoreRecord: true)
                             ->alphaDash()
                             ->helperText('URL-friendly version of name. Will be auto-generated if left empty.'),
-                            
+
                         Forms\Components\Textarea::make('description')
                             ->label('Deskripsi')
                             ->maxLength(65535)
                             ->columnSpanFull(),
                     ])->columns(2),
-                    
+
                 Forms\Components\Section::make('Pengaturan Tampilan')
                     ->schema([
                         Forms\Components\TextInput::make('icon')
                             ->label('Icon')
                             ->placeholder('🍽️')
                             ->helperText('Gunakan emoji atau icon class (contoh: 🍽️, 🚗, 💼)'),
-                            
+
                         Forms\Components\ColorPicker::make('color')
                             ->label('Warna')
                             ->default('#6b7280')
                             ->hex()
                             ->rgba(),
-                            
+
                         Forms\Components\Select::make('type')
                             ->label('Jenis Transaksi')
                             ->required()
@@ -85,14 +86,14 @@ class CategoryResource extends Resource
                             ])
                             ->default('expense')
                             ->native(false),
-                            
+
                         Forms\Components\TextInput::make('sort_order')
                             ->label('Urutan')
                             ->numeric()
                             ->default(0)
                             ->helperText('Angka lebih kecil akan ditampilkan lebih dulu'),
                     ])->columns(2),
-                    
+
                 Forms\Components\Section::make('Status')
                     ->schema([
                         Forms\Components\Toggle::make('is_active')
@@ -111,21 +112,21 @@ class CategoryResource extends Resource
                     ->label('#')
                     ->sortable()
                     ->width(60),
-                    
+
                 Tables\Columns\TextColumn::make('icon')
                     ->label('Icon')
                     ->default('-')
                     ->width(60),
-                    
+
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nama')
                     ->searchable()
                     ->weight(FontWeight::Medium)
                     ->sortable(),
-                    
+
                 Tables\Columns\BadgeColumn::make('type')
                     ->label('Jenis')
-                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                    ->formatStateUsing(fn(string $state): string => match ($state) {
                         'income' => 'Pemasukan',
                         'expense' => 'Pengeluaran',
                         'both' => 'Keduanya',
@@ -135,22 +136,22 @@ class CategoryResource extends Resource
                         'danger' => 'expense',
                         'primary' => 'both',
                     ]),
-                    
+
                 Tables\Columns\ColorColumn::make('color')
                     ->label('Warna'),
-                    
+
                 Tables\Columns\TextColumn::make('transactions_count')
                     ->label('Total Transaksi')
                     ->counts('transactions')
                     ->sortable()
                     ->badge()
                     ->color('gray'),
-                    
+
                 Tables\Columns\IconColumn::make('is_active')
                     ->label('Status')
                     ->boolean()
                     ->sortable(),
-                    
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Dibuat')
                     ->dateTime('d/m/Y H:i')
@@ -165,7 +166,7 @@ class CategoryResource extends Resource
                         'expense' => 'Pengeluaran',
                         'both' => 'Keduanya',
                     ]),
-                    
+
                 SelectFilter::make('is_active')
                     ->label('Status')
                     ->options([
@@ -183,23 +184,25 @@ class CategoryResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()
                         ->requiresConfirmation(),
-                        
+
                     Tables\Actions\BulkAction::make('activate')
                         ->label('Aktifkan')
                         ->icon('heroicon-o-check-circle')
                         ->color('success')
-                        ->action(fn (\Illuminate\Database\Eloquent\Collection $records) => 
+                        ->action(
+                            fn(\Illuminate\Database\Eloquent\Collection $records) =>
                             $records->each->update(['is_active' => true])
                         )
                         ->requiresConfirmation()
                         ->modalHeading('Aktifkan Kategori')
                         ->modalDescription('Apakah Anda yakin ingin mengaktifkan kategori yang dipilih?'),
-                        
+
                     Tables\Actions\BulkAction::make('deactivate')
                         ->label('Nonaktifkan')
                         ->icon('heroicon-o-x-circle')
                         ->color('danger')
-                        ->action(fn (\Illuminate\Database\Eloquent\Collection $records) => 
+                        ->action(
+                            fn(\Illuminate\Database\Eloquent\Collection $records) =>
                             $records->each->update(['is_active' => false])
                         )
                         ->requiresConfirmation()

@@ -4,15 +4,20 @@ namespace App\Filament\Widgets;
 
 use App\Models\Transaction;
 use Filament\Widgets\ChartWidget;
+use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Carbon;
 
 class TransactionChartWidget extends ChartWidget
 {
     protected static ?string $heading = 'Pemasukan & Pengeluaran';
-    
+
+    protected static bool $isLazy = false;
+
     protected static ?int $sort = 2;
-    
-    // protected int | string | array $columnSpan = 'full';
+
+    protected static ?string $maxHeight = '200px';
+
+    protected int | string | array $columnSpan = 'full';
 
     public ?string $filter = 'trend';
 
@@ -28,12 +33,12 @@ class TransactionChartWidget extends ChartWidget
     protected function getData(): array
     {
         $filter = $this->filter;
-        
-        return match($filter) {
+
+        return match ($filter) {
             'trend' => $this->getTrendData(),
             // 'category' => $this->getCategoryData(),
             'daily' => $this->getDailyData(),
-            default => $this->getTrendData(),
+            default => $this->getDailyData(),
         };
     }
 
@@ -42,24 +47,24 @@ class TransactionChartWidget extends ChartWidget
         $months = [];
         $incomeData = [];
         $expenseData = [];
-        
+
         for ($i = 5; $i >= 0; $i--) {
             $date = now()->subMonths($i);
             $monthName = $date->format('M Y');
-            
+
             $income = Transaction::income()
                 ->inMonth($date->month, $date->year)
                 ->sum('amount');
-                
+
             $expense = Transaction::expense()
                 ->inMonth($date->month, $date->year)
                 ->sum('amount');
-            
+
             $months[] = $monthName;
             $incomeData[] = $income;
             $expenseData[] = $expense;
         }
-        
+
         return [
             'datasets' => [
                 [
@@ -84,7 +89,7 @@ class TransactionChartWidget extends ChartWidget
     // protected function getCategoryData(): array
     // {
     //     $currentMonth = now();
-        
+
     //     // Ambil top 5 kategori pengeluaran bulan ini
     //     $expenseCategories = Transaction::with('category')
     //         ->expense()
@@ -95,21 +100,21 @@ class TransactionChartWidget extends ChartWidget
     //         ->orderByDesc('total')
     //         ->limit(5)
     //         ->get();
-            
+
     //     $labels = [];
     //     $data = [];
     //     $colors = [
     //         '#ef4444', '#f97316', '#eab308', '#84cc16', '#06b6d4'
     //     ];
-        
+
     //     foreach ($expenseCategories as $index => $transaction) {
     //         $categoryName = $transaction->category?->name ?? 'Tidak ada kategori';
     //         $categoryIcon = $transaction->category?->icon ?? '';
-            
+
     //         $labels[] = ($categoryIcon ? $categoryIcon . ' ' : '') . $categoryName;
     //         $data[] = $transaction->total;
     //     }
-        
+
     //     return [
     //         'datasets' => [
     //             [
@@ -127,24 +132,24 @@ class TransactionChartWidget extends ChartWidget
         $days = [];
         $incomeData = [];
         $expenseData = [];
-        
+
         for ($i = 29; $i >= 0; $i--) {
             $date = now()->subDays($i);
             $dayName = $date->format('d/m');
-            
+
             $income = Transaction::income()
                 ->whereDate('transaction_date', $date)
                 ->sum('amount');
-                
+
             $expense = Transaction::expense()
                 ->whereDate('transaction_date', $date)
                 ->sum('amount');
-            
+
             $days[] = $dayName;
             $incomeData[] = $income;
             $expenseData[] = $expense;
         }
-        
+
         return [
             'datasets' => [
                 [
@@ -183,14 +188,14 @@ class TransactionChartWidget extends ChartWidget
                 ],
             ],
         ];
-        
+
         if ($this->filter === 'category') {
             return array_merge($baseOptions, [
                 'maintainAspectRatio' => false,
                 'responsive' => true,
             ]);
         }
-        
+
         return array_merge($baseOptions, [
             'scales' => [
                 'y' => [

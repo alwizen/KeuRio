@@ -7,6 +7,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -38,16 +39,23 @@ class AdminPanelProvider extends PanelProvider
                 Pages\Dashboard::class,
                 // Dashboard::class
             ])
+            ->navigationGroups([
+                NavigationGroup::make()
+                    ->label('KAS 💸'),
+                NavigationGroup::make()
+                    ->label('HR 👥')
+            ])
+            ->sidebarFullyCollapsibleOnDesktop()
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-            //     // Widgets\AccountWidget::class, // Comment out default widget
-            //     // Widgets\FilamentInfoWidget::class, // Comment out default widget
-                
-            //     // Custom widgets untuk transaction
+                //     // Widgets\AccountWidget::class, // Comment out default widget
+                //     // Widgets\FilamentInfoWidget::class, // Comment out default widget
+
+                //     // Custom widgets untuk transaction
                 \App\Filament\Widgets\TransactionOverviewWidget::class,
                 \App\Filament\Widgets\TransactionChartWidget::class,
-            //     \App\Filament\Widgets\RecentTransactionsWidget::class,
-            //     \App\Filament\Widgets\QuickActionsWidget::class,
+                //     \App\Filament\Widgets\RecentTransactionsWidget::class,
+                //     \App\Filament\Widgets\QuickActionsWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

@@ -11,6 +11,10 @@ class TransactionOverviewWidget extends BaseWidget
 {
     protected static ?int $sort = 1;
 
+    protected ?string $heading = 'Ringkasan';
+
+    protected static bool $isLazy = false;
+
     protected function getStats(): array
     {
         // --- Total all-time ---
