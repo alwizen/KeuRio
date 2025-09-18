@@ -1,6 +1,7 @@
 {{-- resources/views/payroll/slip.blade.php --}}
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <title>Slip Gaji</title>
@@ -19,7 +20,8 @@
 
         .slip {
             width: 100%;
-            height: 14.5cm; /* setengah A4 */
+            height: 14.5cm;
+            /* setengah A4 */
             border: 1px solid #000;
             padding: 10px;
             box-sizing: border-box;
@@ -39,7 +41,8 @@
             margin-top: 10px;
         }
 
-        th, td {
+        th,
+        td {
             padding: 4px;
             text-align: left;
             font-size: 11px;
@@ -60,6 +63,7 @@
         }
     </style>
 </head>
+
 <body>
     @foreach ($payrolls as $payroll)
         <div class="slip">
@@ -115,4 +119,5 @@
         </div>
     @endforeach
 </body>
+
 </html>
