@@ -79,8 +79,8 @@ class TransactionResource extends Resource
                     ->getOptionLabelFromRecordUsing(
                         fn(Category $record) => ($record->icon ? $record->icon . ' ' : '') . $record->name
                     )
-                    ->searchable()
-                    ->preload()
+                    // ->searchable()
+                    // ->preload()
                     ->createOptionForm([
                         Forms\Components\TextInput::make('name')
                             ->label('Nama Kategori')
